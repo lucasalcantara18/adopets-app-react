@@ -1,18 +1,9 @@
-import React, {useEffect, useState, ChangeEvent, FormEvent} from 'react';
-import logo from '../../assets/imagem2.png';
-import { FiLogIn, FiArrowLeft } from 'react-icons/fi';
+import React, { useState, ChangeEvent } from 'react';
+import { FiArrowLeft } from 'react-icons/fi';
 import { Link, useHistory } from 'react-router-dom'
 import './styles.css';
-import { Layout, Form, Menu, Row, Col , Select, Input, InputNumber, DatePicker, AutoComplete, Cascader, Card,  Table, Tag, Space, Modal, Button } from 'antd';
-import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
-import { AudioOutlined } from '@ant-design/icons';
+import { Layout, Form, Menu, Select, Input, Button } from 'antd';
 import api from '../../services/api';
-import axios from 'axios';
-
-const { Search } = Input;
-const { SubMenu } = Menu;
-const { Header, Footer, Sider, Content } = Layout;
-const { Option } = Select;
 
 
 const NewUser = () => {
@@ -39,15 +30,11 @@ const NewUser = () => {
     }
 
     await api.post('users/register', data).then(response => {
-        console.log(response);
-        
-        console.log('Tentativa de casastro');   
-        console.log(response.data);
         alert('Success, now you can login');
         history.push('/');         
     }).catch((err) => {
         console.log(err);
-        
+        alert(err);                 
     });
     
 }
@@ -59,7 +46,7 @@ const NewUser = () => {
                     <header>
                         <img src={'https://dewey.tailorbrands.com/production/brand_version_mockup_image/203/3268607203_72bf8960-10a3-4fe8-916a-265f15c08870.png?cb=1593984400'} width={100} alt="Ecoleta"/>
                         <Link to="/">
-                          <FiArrowLeft/> Voltar para a Home
+                          <FiArrowLeft/> Return to home page
                         </Link>
                     </header>
                     

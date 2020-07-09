@@ -1,19 +1,16 @@
-import React, {useEffect, useState, ChangeEvent, FormEvent, useContext, useRef} from 'react';
-import logo from '../../assets/logo.svg';
+import React, {useEffect, useState, ChangeEvent} from 'react';
 import './styles.css';
 import { FiArrowLeft, FiX } from 'react-icons/fi';
 import { Link, useHistory } from 'react-router-dom';
-import { Layout, Form, Menu, Row, Col , Select, Input, Popconfirm, InputNumber, DatePicker, AutoComplete, Cascader, Card,  Table, Tag, Space, Modal, Button, Pagination } from 'antd';
-import { MailOutlined, AppstoreOutlined, SettingOutlined } from '@ant-design/icons';
-import { AudioOutlined } from '@ant-design/icons';
+import { Layout, Form, Menu, Row, Col , Select, Input, Popconfirm, Table, Tag, Space, Modal, Button, Pagination } from 'antd';
+import { MailOutlined } from '@ant-design/icons';
 import api from '../../services/api';
-import axios from 'axios';
 import Product from '../../models/product-model';
 import usePagination from '../../utils/pagination';
 
 
 const { SubMenu } = Menu;
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Sider, Content } = Layout;
 const { Option } = Select;
 let productsList: Product[] = [];
    
@@ -109,14 +106,13 @@ let productsList: Product[] = [];
 
         const showModal = () => {
             setVisible(true);
-            console.log(localStorage);
         };
         
         const handleOkInsert = async () => {
             setLoading(true);
 
             const {name, description, category, price, stock} = formData;
-        
+    
             const data = {
                 name,
                 description,
@@ -135,8 +131,7 @@ let productsList: Product[] = [];
                 setLoading(false);         
                 setVisible(false);
             }).catch((err) => {
-                console.log(err);
-                
+                alert(err);                
             });
         };
 
@@ -157,7 +152,6 @@ let productsList: Product[] = [];
                 stock: Number(stock),
                 user: localStorage.getItem('uuid')
             }
-            // console.log(data);
             
             await api.put(`products/update/${uuidProduct}`, data, {headers: {'Authorization': localStorage.getItem('token')}}).then(response => {
                 console.log(response.data);
@@ -168,7 +162,7 @@ let productsList: Product[] = [];
                 setEditable(false);
             }).catch((err) => {
                 console.log(err);
-                
+                alert(err);         
             });
         };
     
@@ -184,12 +178,11 @@ let productsList: Product[] = [];
                 console.log(res);
                 if(res.data.authenticate == false){
                     history.push('/');
-                    alert('Error, you\'re not allowed. Please log in again');
-                   
+                    alert('Error, you\'re not allowed. Please log in again');    
                 }
             }).catch(err => {
                 console.log(err);
-                
+                alert('Error, please contact the admin');         
             });
 
             
@@ -202,19 +195,14 @@ let productsList: Product[] = [];
             
             setIsFetching(true);
             api.get(`products/list?uuid=${localStorage.getItem('uuid')}&limit=10&offset=${pageSize * (currentPage - 1)}`, {headers: {'Authorization': localStorage.getItem('token')}}).then((res: any) => {
-
-                console.log("Geral");
-                
                 productsList = res.data.products;
                 setIsFetching(false);
                 setTotal(res.data.count);
                 setProducts(productsList);     
             }).catch(err => {
-                console.log("sfdsddf");
-                
                 console.log(err);
                 setIsFetching(false);
-                
+                alert('Error, please contact the admin');         
             });
         }, []);
 
@@ -231,7 +219,7 @@ let productsList: Product[] = [];
                 }).catch(err => {
                     console.log(err);
                     setIsFetching(false);
-                    
+                    alert('Error, please contact the admin');         
                 });
            }else{
             api.get(`products/list?uuid=${localStorage.getItem('uuid')}&limit=10&offset=${pageSize * (currentPage - 1)}`, {headers: {'Authorization': localStorage.getItem('token')}}).then((res: any) => {           
@@ -242,7 +230,7 @@ let productsList: Product[] = [];
                 }).catch(err => {
                     console.log(err);
                     setIsFetching(false);
-                    
+                    alert('Error, please contact the admin');         
                 });
            }
            
@@ -256,11 +244,10 @@ let productsList: Product[] = [];
                 console.log(response);
                 localStorage.setItem('token', '');
                 localStorage.setItem('uuid', '');
-                console.log('Tentativa de logout');   
                 history.push('/');         
             }).catch((err) => {
                 console.log(err);
-                
+                alert('Error, please contact the admin');         
             });
 
         }
@@ -280,8 +267,6 @@ let productsList: Product[] = [];
         const handleInputTextSelect = (event: ChangeEvent<HTMLInputElement>) => {
             const {value} = event.target;
             setTextFilter(value);
-        
-
         }
 
         const handleSeach = () => {
@@ -295,6 +280,7 @@ let productsList: Product[] = [];
             }).catch(err => {
                 alert(err);
                 setIsFetching(false);
+                alert('Error, please contact the admin');         
             });
         }
 
@@ -310,7 +296,7 @@ let productsList: Product[] = [];
             }).catch(err => {
                 console.log(err);
                 setIsFetching(false);
-                
+                alert('Error, please contact the admin');         
             });
         }
         
@@ -322,10 +308,6 @@ let productsList: Product[] = [];
 
         }
 
-        const handleTeste = () => {
-            console.log(currentPage);
-            
-        }
         const handleDelete = (row: Product) => {
             setIsFetching(true);
             setProducts(products.filter(item => item._id != row._id));
@@ -335,9 +317,7 @@ let productsList: Product[] = [];
             }).catch(err => {
                 alert(err);
             });
-        }
-        //-----------------------------------
-        //-----------------------------------
+        } 
 
         return(
             <Layout >
@@ -362,7 +342,7 @@ let productsList: Product[] = [];
                     </Col>
                     <Col span={4} style={{display: 'flex', alignContent: 'center', justifyContent: 'center'}}>
                         <Link to="#" onClick={handleLogout}>
-                        <FiArrowLeft/> Sair
+                        <FiArrowLeft/> Exit
                         </Link>
                     </Col>
                 </Row>    
